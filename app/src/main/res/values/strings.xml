@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Dyvoker Weather</string>
+    <string name="check_on_map">Check on map</string>
+    <string name="weather_map">Weather map</string>
+</resources>
