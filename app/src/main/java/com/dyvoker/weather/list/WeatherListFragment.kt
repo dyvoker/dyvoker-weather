@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.dyvoker.weather.R
+import com.dyvoker.weather.common.WeatherIconUtils
+import com.dyvoker.weather.common.data.WeatherItemData
 import com.dyvoker.weather.databinding.FragmentWeatherListBinding
 import com.dyvoker.weather.common.rv.RVAdapter
 import com.dyvoker.weather.common.rv.RVArrayListItemsProvider
@@ -50,7 +52,7 @@ class WeatherListFragment : Fragment() {
                 @SuppressLint("SetTextI18n")
                 override fun onBind(holder: WeatherVH, item: WeatherItemData) {
                     holder.temperature.text = "${item.temperature}°C"
-                    holder.icon.setImageResource(item.icon.getResId())
+                    holder.icon.setImageResource(WeatherIconUtils.getResId(item.icon))
                     // TODO Also need to change date.
                 }
             },
