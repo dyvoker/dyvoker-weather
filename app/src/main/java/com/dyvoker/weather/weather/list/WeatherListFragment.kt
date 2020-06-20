@@ -31,6 +31,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
 
     @Inject
     lateinit var presenter: WeatherListContract.Presenter
+    private lateinit var coordinates: MapPoint
     private val itemsProvider = RVArrayListItemsProvider<DailyWeatherData>()
 
     override fun onCreateView(
@@ -43,6 +44,14 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (arguments == null) {
+            // A straight crash will motivate developers to write better code!
+            throw RuntimeException("arguments is not set for this WeatherListFragment!")
+        }
+        coordinates = MapPoint(
+            arguments!!.getDouble(latitudeKey),
+            arguments!!.getDouble(longitudeKey)
+        )
         binding.recyclerView.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
@@ -89,7 +98,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.updateForecast(MapPoint(59.950015, 30.316599))
+        presenter.updateForecast(coordinates)
     }
 
     override fun onDestroyView() {
@@ -100,5 +109,10 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
     override fun showForecast(list: List<DailyWeatherData>) {
         itemsProvider.clear()
         itemsProvider.addAll(list)
+    }
+
+    companion object {
+        const val latitudeKey = "latitude_key"
+        const val longitudeKey = "longitude_key"
     }
 }

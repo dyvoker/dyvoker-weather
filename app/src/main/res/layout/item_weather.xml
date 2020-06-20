@@ -9,7 +9,7 @@
         android:id="@+id/icon"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:padding="8dp"
+        android:padding="12dp"
         app:srcCompat="@drawable/ic_sunny" />
 
     <TextView

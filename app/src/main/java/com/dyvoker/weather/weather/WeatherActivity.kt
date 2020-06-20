@@ -21,6 +21,7 @@ import com.dyvoker.weather.weather.list.WeatherListFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
 
+
 class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
 
     private lateinit var binding: ActivityWeatherBinding
@@ -52,7 +53,14 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
             override fun getItemCount() = cities.size
 
             override fun createFragment(position: Int): Fragment {
-                return WeatherListFragment() // cities[position]
+                val coordinates = cities.values.elementAt(position)
+                val fragment = WeatherListFragment()
+                val bundle = Bundle().apply {
+                    putDouble(WeatherListFragment.latitudeKey, coordinates.latitude)
+                    putDouble(WeatherListFragment.longitudeKey, coordinates.longitude)
+                }
+                fragment.arguments = bundle
+                return fragment
             }
         }
         binding.viewPager.offscreenPageLimit = cities.size // Prevents destroying fragments.
