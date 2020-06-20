@@ -1,4 +1,4 @@
-package com.dyvoker.weather.weather
+package com.dyvoker.weather.weather.list
 
 import android.view.View
 import android.widget.ImageView

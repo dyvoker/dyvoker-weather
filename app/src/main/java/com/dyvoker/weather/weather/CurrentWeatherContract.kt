@@ -1,8 +1,8 @@
 package com.dyvoker.weather.weather
 
 import com.dyvoker.weather.common.BaseContract
+import com.dyvoker.weather.core.data.CurrentWeatherData
 import com.dyvoker.weather.core.data.MapPoint
-import com.dyvoker.weather.core.data.WeatherItemData
 
 class CurrentWeatherContract {
 
@@ -11,6 +11,6 @@ class CurrentWeatherContract {
     }
 
     interface View : BaseContract.View {
-        fun showWeather(data: WeatherItemData)
+        fun showWeather(data: CurrentWeatherData)
     }
 }

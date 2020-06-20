@@ -11,11 +11,13 @@ import androidx.viewpager2.widget.ViewPager2
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
 import com.dyvoker.weather.common.WeatherIconUtils
+import com.dyvoker.weather.common.toCelsiusInt
+import com.dyvoker.weather.core.data.CurrentWeatherData
 import com.dyvoker.weather.core.data.MapPoint
-import com.dyvoker.weather.core.data.WeatherItemData
 import com.dyvoker.weather.databinding.ActivityWeatherBinding
 import com.dyvoker.weather.di.component.DaggerWeatherScreenComponent
 import com.dyvoker.weather.map.WeatherMapActivity
+import com.dyvoker.weather.weather.list.WeatherListFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
 
@@ -74,9 +76,9 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun showWeather(data: WeatherItemData) {
+    override fun showWeather(data: CurrentWeatherData) {
         binding.currentIcon.setImageResource(WeatherIconUtils.getResId(data.icon))
-        binding.currentTemperature.text = "${data.temperature}°C"
+        binding.currentTemperature.text = "${data.temperature.toCelsiusInt()}°C"
         binding.currentStatus.text = "TODO"
     }
 }
