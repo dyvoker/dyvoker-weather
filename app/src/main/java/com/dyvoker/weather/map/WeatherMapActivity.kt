@@ -3,10 +3,11 @@ package com.dyvoker.weather.map
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.dyvoker.weather.R
+import com.dyvoker.weather.core.data.CurrentWeatherData
 import com.dyvoker.weather.databinding.ActivityWeatherMapBinding
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-class WeatherMapActivity : AppCompatActivity() {
+class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View {
 
     private lateinit var binding: ActivityWeatherMapBinding
 
@@ -24,5 +25,9 @@ class WeatherMapActivity : AppCompatActivity() {
                 onBackPressed()
             }
         }
+    }
+
+    override fun showWeather(data: CurrentWeatherData) {
+        // TODO
     }
 }
