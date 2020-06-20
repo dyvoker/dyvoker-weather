@@ -79,6 +79,6 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
     override fun showWeather(data: CurrentWeatherData) {
         binding.currentIcon.setImageResource(WeatherIconUtils.getResId(data.icon))
         binding.currentTemperature.text = "${data.temperature.toCelsiusInt()}°C"
-        binding.currentStatus.text = "TODO"
+        binding.currentStatus.text = data.summary
     }
 }
