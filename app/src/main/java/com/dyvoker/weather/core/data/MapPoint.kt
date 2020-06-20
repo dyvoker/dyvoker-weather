@@ -1,4 +1,4 @@
-package com.dyvoker.weather.common.data
+package com.dyvoker.weather.core.data
 
 data class MapPoint(
     val latitude: Double,

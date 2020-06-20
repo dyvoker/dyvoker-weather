@@ -1,4 +1,4 @@
-package com.dyvoker.weather.list
+package com.dyvoker.weather.weather
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.WeatherIconUtils
-import com.dyvoker.weather.common.data.WeatherItemData
+import com.dyvoker.weather.core.data.WeatherItemData
 import com.dyvoker.weather.databinding.FragmentWeatherListBinding
 import com.dyvoker.weather.common.rv.RVAdapter
 import com.dyvoker.weather.common.rv.RVArrayListItemsProvider

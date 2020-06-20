@@ -1,4 +1,4 @@
-package com.dyvoker.weather.list
+package com.dyvoker.weather.weather
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -9,20 +9,26 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.dyvoker.weather.R
+import com.dyvoker.weather.common.App
 import com.dyvoker.weather.common.WeatherIconUtils
-import com.dyvoker.weather.common.data.MapPoint
-import com.dyvoker.weather.common.data.WeatherItemData
+import com.dyvoker.weather.core.data.MapPoint
+import com.dyvoker.weather.core.data.WeatherItemData
 import com.dyvoker.weather.databinding.ActivityWeatherBinding
+import com.dyvoker.weather.di.component.DaggerWeatherScreenComponent
 import com.dyvoker.weather.map.WeatherMapActivity
 import com.google.android.material.tabs.TabLayoutMediator
+import javax.inject.Inject
 
-class WeatherActivity : AppCompatActivity(), CurrentWeatherPresenter.View {
+class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
 
     private lateinit var binding: ActivityWeatherBinding
     private val cities = mutableMapOf(
         "Санкт-Петербург" to MapPoint(59.950015, 30.316599),
         "Москва" to MapPoint(55.753913, 37.620836)
     )
+
+    @Inject
+    lateinit var presenter: CurrentWeatherContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +37,7 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherPresenter.View {
         setContentView(view)
 
         // Toolbar.
-        with (binding.toolbarWidget.toolbar) {
+        with(binding.toolbarWidget.toolbar) {
             inflateMenu(R.menu.menu_main_activity)
             val checkOnMap: View = findViewById(R.id.action_check_on_map)
             checkOnMap.setOnClickListener {
@@ -54,7 +60,11 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherPresenter.View {
             tab.text = cities.keys.elementAt(position)
         }.attach()
 
-        val presenter = CurrentWeatherPresenter(this)
+        // DI.
+        val appComponent = App.appComponent()
+        DaggerWeatherScreenComponent.factory().create(appComponent).inject(this)
+
+        presenter.attach(this)
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 val coordinates = cities.values.elementAt(position)
