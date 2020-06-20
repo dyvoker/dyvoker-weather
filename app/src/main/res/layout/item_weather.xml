@@ -19,7 +19,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="80dp"
         android:textColor="@color/warm_black"
-        android:textSize="32sp"
+        android:textSize="28sp"
         tools:text="-1°C" />
 
     <TextView

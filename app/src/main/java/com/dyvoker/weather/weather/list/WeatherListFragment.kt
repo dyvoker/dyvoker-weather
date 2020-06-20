@@ -10,19 +10,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
 import com.dyvoker.weather.common.WeatherIconUtils
-import com.dyvoker.weather.core.data.DailyWeatherData
-import com.dyvoker.weather.databinding.FragmentWeatherListBinding
 import com.dyvoker.weather.common.rv.RVAdapter
 import com.dyvoker.weather.common.rv.RVArrayListItemsProvider
 import com.dyvoker.weather.common.rv.VHBinder
 import com.dyvoker.weather.common.rv.VHFactory
 import com.dyvoker.weather.common.toCelsiusInt
+import com.dyvoker.weather.core.data.DailyWeatherData
 import com.dyvoker.weather.core.data.MapPoint
+import com.dyvoker.weather.databinding.FragmentWeatherListBinding
 import com.dyvoker.weather.di.component.DaggerWeatherListScreenComponent
+import java.util.*
 import javax.inject.Inject
 
 class WeatherListFragment : Fragment(), WeatherListContract.View {
 
+    private val calendar = Calendar.getInstance()
     private var _binding: FragmentWeatherListBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -67,7 +69,12 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
                     val high = item.temperatureHigh.toCelsiusInt()
                     holder.temperature.text = "${low}..${high}°C"
                     holder.icon.setImageResource(WeatherIconUtils.getResId(item.icon))
-                    // TODO Also need to change date.
+                    calendar.timeInMillis = item.timestamp * 1000L
+                    holder.date.text = String.format(
+                        Locale.getDefault(),
+                        "%1\$ta, %1\$te %1\$tB",
+                        calendar
+                    )
                 }
             },
             itemsProvider
