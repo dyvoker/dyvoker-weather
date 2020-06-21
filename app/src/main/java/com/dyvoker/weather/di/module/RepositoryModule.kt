@@ -16,9 +16,13 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideWeatherRepository(api: DarkSkyApiService, db: AppDatabase): WeatherRepository =
+    fun provideWeatherRepository(
+        context: Context,
+        api: DarkSkyApiService,
+        db: AppDatabase
+    ): WeatherRepository =
         WeatherCacheRepository(
-            WeatherApiRepository(api),
+            WeatherApiRepository(context, api),
             db.currentWeatherDataDao(),
             db.dailyWeatherDataDao()
         )

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
+import com.dyvoker.weather.common.getCurrentLocale
 import com.dyvoker.weather.core.DarkSkyUtils
 import com.dyvoker.weather.common.rv.RVAdapter
 import com.dyvoker.weather.common.rv.RVArrayListItemsProvider
@@ -43,6 +44,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
         return binding.root
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (arguments == null) {
             // A straight crash will motivate developers to write better code!
@@ -79,11 +81,11 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
                     holder.temperature.text = "${low}..${high}°C"
                     holder.icon.setImageResource(DarkSkyUtils.getIconId(item.icon))
                     calendar.timeInMillis = item.timestamp * 1000L
-                    holder.date.text = String.format(
-                        Locale.getDefault(),
-                        "%1\$ta, %1\$te %1\$tB",
-                        calendar
-                    )
+                    val locale = requireContext().getCurrentLocale()
+                    val dayOfWeek = String.format(locale, "%1\$ta", calendar).toUpperCase(locale)
+                    val dayOfMonth = String.format(locale, "%1\$te", calendar)
+                    val month = String.format(locale, "%1\$tB", calendar).capitalize(locale)
+                    holder.date.text = "$dayOfWeek, $dayOfMonth $month"
                 }
             },
             itemsProvider
