@@ -36,8 +36,7 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWeatherBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         // Toolbar.
         with(binding.toolbarWidget.toolbar) {
