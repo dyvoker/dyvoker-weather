@@ -13,7 +13,6 @@ class WeatherRepositoryImpl(
 
     override suspend fun getCurrentWeather(coordinates: MapPoint): CurrentWeatherData {
         return api.getCurrentWeather(
-            "3e7e519ea86c8e3fcf67c0f4870513d7",
             coordinates.latitude.toString(),
             coordinates.longitude.toString()
         ).await().currentWeather
@@ -21,7 +20,6 @@ class WeatherRepositoryImpl(
 
     override suspend fun getForecastWeather(coordinates: MapPoint): List<DailyWeatherData> {
         return api.getForecastWeather(
-            "3e7e519ea86c8e3fcf67c0f4870513d7",
             coordinates.latitude.toString(),
             coordinates.longitude.toString()
         ).await().dailyForecastData.list

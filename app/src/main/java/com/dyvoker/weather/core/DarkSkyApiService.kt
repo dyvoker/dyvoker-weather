@@ -8,16 +8,14 @@ import retrofit2.http.Path
 
 interface DarkSkyApiService {
 
-    @GET("forecast/{key}/{latitude},{longitude}")
+    @GET("forecast/API_KEY/{latitude},{longitude}")
     fun getForecastWeather(
-        @Path("key") key: String,
         @Path("latitude") latitude: String,
         @Path("longitude") longitude: String
     ): Call<DailyForecastResponse>
 
-    @GET("forecast/{key}/{latitude},{longitude}")
+    @GET("forecast/API_KEY/{latitude},{longitude}")
     fun getCurrentWeather(
-        @Path("key") key: String,
         @Path("latitude") latitude: String,
         @Path("longitude") longitude: String
     ): Call<CurrentWeatherResponse>
