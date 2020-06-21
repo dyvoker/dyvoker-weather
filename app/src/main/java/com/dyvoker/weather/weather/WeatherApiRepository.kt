@@ -7,21 +7,21 @@ import com.dyvoker.weather.core.data.DailyWeatherData
 import com.dyvoker.weather.core.repository.WeatherRepository
 import retrofit2.await
 
-class WeatherRepositoryImpl(
+class WeatherApiRepository(
     private val api: DarkSkyApiService
 ): WeatherRepository {
 
-    override suspend fun getCurrentWeather(coordinates: MapPoint): CurrentWeatherData {
+    override suspend fun getCurrentWeather(point: MapPoint): CurrentWeatherData {
         return api.getCurrentWeather(
-            coordinates.latitude.toString(),
-            coordinates.longitude.toString()
+            point.latitude.toString(),
+            point.longitude.toString()
         ).await().currentWeather
     }
 
-    override suspend fun getForecastWeather(coordinates: MapPoint): List<DailyWeatherData> {
+    override suspend fun getForecastWeather(point: MapPoint): List<DailyWeatherData> {
         return api.getForecastWeather(
-            coordinates.latitude.toString(),
-            coordinates.longitude.toString()
+            point.latitude.toString(),
+            point.longitude.toString()
         ).await().dailyForecastData.list
     }
 }
