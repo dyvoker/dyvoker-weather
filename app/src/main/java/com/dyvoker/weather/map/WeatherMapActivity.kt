@@ -1,5 +1,7 @@
 package com.dyvoker.weather.map
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.dyvoker.weather.R
@@ -12,9 +14,11 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.toolbar.view.*
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 import javax.inject.Inject
+
 
 class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapReadyCallback {
 
@@ -46,18 +50,54 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         presenter.attach(this)
+
+        binding.myLocation.setOnClickListener {
+            goToMyLocation()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions
+            .onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
     override fun showWeather(data: CurrentWeatherData) {
         // TODO
     }
 
+    override fun showLocation(point: LatLng) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.0f))
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+    }
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    @SuppressLint("MissingPermission")
+    @AfterPermissionGranted(RC_LOCATION_PERMISSION)
+    private fun goToMyLocation() {
+        if (hasLocationPermission()) {
+            presenter.goToMyLocation()
+        } else {
+            // Ask for location permission.
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.rationale_location),
+                RC_LOCATION_PERMISSION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
+    }
+
+    private fun hasLocationPermission() =
+        EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)
+
+    companion object {
+        private const val RC_LOCATION_PERMISSION = 42
     }
 }
