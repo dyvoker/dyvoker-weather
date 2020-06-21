@@ -2,10 +2,13 @@ package com.dyvoker.weather.map
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.location.Geocoder
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
+import com.dyvoker.weather.common.getCurrentLocale
 import com.dyvoker.weather.core.data.CurrentWeatherData
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.databinding.ActivityWeatherMapBinding
@@ -32,6 +35,7 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
     private lateinit var map: GoogleMap
     private lateinit var weatherMarker: Marker
     private lateinit var weatherMarketRenderer: WeatherMarkerRenderer
+    private lateinit var geocoder: Geocoder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,8 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
         // DI.
         val appComponent = App.appComponent()
         DaggerWeatherMapScreenComponent.factory().create(appComponent).inject(this)
+
+        geocoder = Geocoder(this, getCurrentLocale())
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -80,10 +86,30 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
         showWeatherMarker(point, data)
     }
 
+    override fun showToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMapClickListener {
             presenter.updateWeatherAtPoint(it.toMapPoint())
+        }
+        map.setOnMarkerClickListener {
+            val point = it.position.toMapPoint()
+            val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+            if (list.isNotEmpty()) {
+                val address = list.first()
+                var city = when {
+                    address.locality != null -> address.locality
+                    address.adminArea != null -> "${address.adminArea} (${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+                    address.countryName != null -> "${address.countryName} (${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+                    else -> "(${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+                }
+                presenter.addCity(city, point)
+                return@setOnMarkerClickListener true
+            }
+            return@setOnMarkerClickListener false
         }
     }
 
@@ -94,6 +120,7 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
             weatherMarketRenderer = WeatherMarkerRenderer(this, data)
         }
         val icon = BitmapDescriptorFactory.fromBitmap(
+            // TODO Need correct size.
             weatherMarketRenderer.renderBitmap(600)
         )
         if (this::weatherMarker.isInitialized) {

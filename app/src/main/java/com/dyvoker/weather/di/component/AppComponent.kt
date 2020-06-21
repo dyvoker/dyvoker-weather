@@ -2,6 +2,7 @@ package com.dyvoker.weather.di.component
 
 import android.content.Context
 import com.dyvoker.weather.common.App
+import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.dyvoker.weather.di.module.AppModule
 import com.dyvoker.weather.di.module.RepositoryModule
@@ -30,6 +31,7 @@ interface AppComponent {
     // Downstream modules for dependent components.
     fun appContext(): Context
     fun weatherRepository(): WeatherRepository
+    fun globalRepository(): GlobalRepository
 
     @Component.Factory
     interface Factory {

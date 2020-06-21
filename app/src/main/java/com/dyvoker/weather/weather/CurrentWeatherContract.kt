@@ -8,9 +8,11 @@ class CurrentWeatherContract {
 
     interface Presenter : BaseContract.Presenter<View> {
         fun updateWeather(coordinates: MapPoint)
+        fun weatherMapViewClosed()
     }
 
     interface View : BaseContract.View {
         fun showWeather(data: CurrentWeatherData)
+        fun showCitiesTabs(cities: Map<String, MapPoint>)
     }
 }

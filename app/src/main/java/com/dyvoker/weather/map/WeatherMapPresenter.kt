@@ -3,6 +3,7 @@ package com.dyvoker.weather.map
 import android.annotation.SuppressLint
 import android.content.Context
 import com.dyvoker.weather.core.data.MapPoint
+import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -12,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class WeatherMapPresenter(
     context: Context,
-    private val repository: WeatherRepository
+    private val repository: WeatherRepository,
+    private val globalRepository: GlobalRepository
 ) : WeatherMapContract.Presenter {
 
     private lateinit var view: WeatherMapContract.View
@@ -47,5 +49,10 @@ class WeatherMapPresenter(
                 }
             }
         }
+    }
+
+    override fun addCity(cityName: String, point: MapPoint) {
+        globalRepository.addCity(cityName, point)
+        view.showToast("Город добавлен!")
     }
 }

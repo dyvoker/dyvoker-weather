@@ -1,6 +1,7 @@
 package com.dyvoker.weather.weather
 
 import com.dyvoker.weather.core.data.MapPoint
+import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -12,8 +13,9 @@ import kotlinx.coroutines.launch
  * It's a kind of compromise.
  * On my previous job, we used the name "Widget" for View from MVP, but it also uses by Android :)
  */
-class CurrentWeatherPresenter(
-    private val repository: WeatherRepository
+class WeatherPresenter(
+    private val repository: WeatherRepository,
+    private val globalRepository: GlobalRepository
 ) : CurrentWeatherContract.Presenter {
 
     private lateinit var view: CurrentWeatherContract.View
@@ -26,6 +28,7 @@ class CurrentWeatherPresenter(
 
     override fun attach(view: CurrentWeatherContract.View) {
         this.view = view
+        view.showCitiesTabs(globalRepository.getCities())
     }
 
     override fun updateWeather(coordinates: MapPoint) {
@@ -33,5 +36,9 @@ class CurrentWeatherPresenter(
             val currentWeather = repository.getCurrentWeather(coordinates)
             view.showWeather(currentWeather)
         }
+    }
+
+    override fun weatherMapViewClosed() {
+        view.showCitiesTabs(globalRepository.getCities())
     }
 }

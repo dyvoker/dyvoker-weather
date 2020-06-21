@@ -72,6 +72,8 @@ class CurrentWeatherDrawable(
         canvas.drawPath(tail, backgroundPaint)
         canvas.drawPath(tail, strokePaint)
 
+        // TODO Draw add button.
+
         // Draw icon and temperature.
         val padding = px(8f)
         val iconSize = (heightPiece * 4f).toInt()
