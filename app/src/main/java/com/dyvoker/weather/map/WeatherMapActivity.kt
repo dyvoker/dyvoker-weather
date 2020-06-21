@@ -15,7 +15,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -31,7 +30,8 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
 
     private lateinit var binding: ActivityWeatherMapBinding
     private lateinit var map: GoogleMap
-    private lateinit var weatherMarket: Marker
+    private lateinit var weatherMarker: Marker
+    private lateinit var weatherMarketRenderer: WeatherMarkerRenderer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,27 +71,38 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
             .onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    override fun showWeatherAtPoint(data: CurrentWeatherData, point: MapPoint) {
-        val position = LatLng(point.latitude, point.longitude)
-        val icon = BitmapDescriptorFactory.fromResource(R.drawable.test)
-        if (this::weatherMarket.isInitialized) {
-            with(weatherMarket) {
-                this@with.position = position
-                setIcon(icon)
-            }
-        } else {
-            weatherMarket = map.addMarker(MarkerOptions().position(position).icon(icon))
-        }
+    override fun showWeatherAtPoint(point: MapPoint, data: CurrentWeatherData) {
+        showWeatherMarker(point, data)
     }
 
-    override fun showLocation(point: LatLng) {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 16.0f))
+    override fun showMyLocationWeather(point: MapPoint, data: CurrentWeatherData) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(point.toLatLng(), 16.0f))
+        showWeatherMarker(point, data)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMapClickListener {
-            presenter.updateWeatherAtPoint(MapPoint(it.latitude, it.longitude))
+            presenter.updateWeatherAtPoint(it.toMapPoint())
+        }
+    }
+
+    private fun showWeatherMarker(point: MapPoint, data: CurrentWeatherData) {
+        if (this::weatherMarketRenderer.isInitialized) {
+            weatherMarketRenderer.setCurrentWeatherData(data)
+        } else {
+            weatherMarketRenderer = WeatherMarkerRenderer(this, data)
+        }
+        val icon = BitmapDescriptorFactory.fromBitmap(
+            weatherMarketRenderer.renderBitmap(600)
+        )
+        if (this::weatherMarker.isInitialized) {
+            with(weatherMarker) {
+                this@with.position = point.toLatLng()
+                setIcon(icon)
+            }
+        } else {
+            weatherMarker = map.addMarker(MarkerOptions().position(point.toLatLng()).icon(icon))
         }
     }
 

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
-import com.dyvoker.weather.common.WeatherIconUtils
+import com.dyvoker.weather.core.DarkSkyUtils
 import com.dyvoker.weather.common.rv.RVAdapter
 import com.dyvoker.weather.common.rv.RVArrayListItemsProvider
 import com.dyvoker.weather.common.rv.VHBinder
@@ -77,7 +77,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
                     val low = item.temperatureLow.toCelsiusInt()
                     val high = item.temperatureHigh.toCelsiusInt()
                     holder.temperature.text = "${low}..${high}°C"
-                    holder.icon.setImageResource(WeatherIconUtils.getResId(item.icon))
+                    holder.icon.setImageResource(DarkSkyUtils.getIconId(item.icon))
                     calendar.timeInMillis = item.timestamp * 1000L
                     holder.date.text = String.format(
                         Locale.getDefault(),

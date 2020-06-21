@@ -6,7 +6,6 @@ import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,10 +29,10 @@ class WeatherMapPresenter(
         this.view = view
     }
 
-    override fun updateWeatherAtPoint(coordinates: MapPoint) {
+    override fun updateWeatherAtPoint(point: MapPoint) {
         GlobalScope.launch(Dispatchers.Main) {
-            val currentWeather = repository.getCurrentWeather(coordinates)
-            view.showWeatherAtPoint(currentWeather, coordinates)
+            val currentWeather = repository.getCurrentWeather(point)
+            view.showWeatherAtPoint(point, currentWeather)
         }
     }
 
@@ -41,8 +40,11 @@ class WeatherMapPresenter(
     override fun goToMyLocation() {
         fusedLocationClient.lastLocation.addOnCompleteListener {
             it.result?.run {
-                val point = LatLng(latitude, longitude)
-                view.showLocation(point)
+                GlobalScope.launch(Dispatchers.Main) {
+                    val coordinates = MapPoint(latitude, longitude)
+                    val currentWeather = repository.getCurrentWeather(coordinates)
+                    view.showMyLocationWeather(coordinates, currentWeather)
+                }
             }
         }
     }

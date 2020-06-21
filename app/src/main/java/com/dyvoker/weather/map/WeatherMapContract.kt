@@ -8,12 +8,12 @@ import com.google.android.gms.maps.model.LatLng
 class WeatherMapContract {
 
     interface Presenter : BaseContract.Presenter<View> {
-        fun updateWeatherAtPoint(coordinates: MapPoint)
+        fun updateWeatherAtPoint(point: MapPoint)
         fun goToMyLocation()
     }
 
     interface View : BaseContract.View {
-        fun showWeatherAtPoint(data: CurrentWeatherData, point: MapPoint)
-        fun showLocation(point: LatLng)
+        fun showWeatherAtPoint(point: MapPoint, data: CurrentWeatherData)
+        fun showMyLocationWeather(point: MapPoint, data: CurrentWeatherData)
     }
 }
