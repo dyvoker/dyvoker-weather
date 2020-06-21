@@ -1,6 +1,5 @@
 package com.dyvoker.weather.weather.list
 
-import android.util.Log
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.core.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +31,6 @@ class WeatherListPresenter(
     override fun updateForecast(coordinates: MapPoint) {
         GlobalScope.launch(Dispatchers.Main) {
             val list = repository.getForecastWeather(coordinates)
-            Log.d("dafasdf", "$list")
             view.showForecast(list)
         }
     }

@@ -9,19 +9,30 @@ import retrofit2.await
 
 class WeatherApiRepository(
     private val api: DarkSkyApiService
-): WeatherRepository {
+) : WeatherRepository {
 
-    override suspend fun getCurrentWeather(point: MapPoint): CurrentWeatherData {
-        return api.getCurrentWeather(
+    override suspend fun getCurrentWeather(point: MapPoint): CurrentWeatherData =
+        api.getCurrentWeather(
             point.latitude.toString(),
             point.longitude.toString()
-        ).await().currentWeather
-    }
+        ).await().currentWeather.apply {
+            latitude = point.latitude
+            longitude = point.longitude
+            creationTimestamp = System.currentTimeMillis()
+        }
 
-    override suspend fun getForecastWeather(point: MapPoint): List<DailyWeatherData> {
-        return api.getForecastWeather(
+    override suspend fun getForecastWeather(point: MapPoint): List<DailyWeatherData> =
+        api.getForecastWeather(
             point.latitude.toString(),
             point.longitude.toString()
-        ).await().dailyForecastData.list
-    }
+        ).await().dailyForecastData.list.apply {
+            val timestamp = System.currentTimeMillis()
+            forEach {
+                it.apply {
+                    latitude = point.latitude
+                    longitude = point.longitude
+                    creationTimestamp = timestamp
+                }
+            }
+        }
 }
