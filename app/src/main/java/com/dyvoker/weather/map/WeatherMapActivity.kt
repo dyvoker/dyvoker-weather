@@ -7,13 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
 import com.dyvoker.weather.core.data.CurrentWeatherData
+import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.databinding.ActivityWeatherMapBinding
 import com.dyvoker.weather.di.component.DaggerWeatherMapScreenComponent
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.toolbar.view.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -27,6 +31,7 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
 
     private lateinit var binding: ActivityWeatherMapBinding
     private lateinit var map: GoogleMap
+    private lateinit var weatherMarket: Marker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +71,17 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
             .onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    override fun showWeather(data: CurrentWeatherData) {
-        // TODO
+    override fun showWeatherAtPoint(data: CurrentWeatherData, point: MapPoint) {
+        val position = LatLng(point.latitude, point.longitude)
+        val icon = BitmapDescriptorFactory.fromResource(R.drawable.test)
+        if (this::weatherMarket.isInitialized) {
+            with(weatherMarket) {
+                this@with.position = position
+                setIcon(icon)
+            }
+        } else {
+            weatherMarket = map.addMarker(MarkerOptions().position(position).icon(icon))
+        }
     }
 
     override fun showLocation(point: LatLng) {
@@ -76,6 +90,9 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map.setOnMapClickListener {
+            presenter.updateWeatherAtPoint(MapPoint(it.latitude, it.longitude))
+        }
     }
 
     @SuppressLint("MissingPermission")

@@ -30,10 +30,10 @@ class WeatherMapPresenter(
         this.view = view
     }
 
-    override fun updateWeather(coordinates: MapPoint) {
+    override fun updateWeatherAtPoint(coordinates: MapPoint) {
         GlobalScope.launch(Dispatchers.Main) {
             val currentWeather = repository.getCurrentWeather(coordinates)
-            view.showWeather(currentWeather)
+            view.showWeatherAtPoint(currentWeather, coordinates)
         }
     }
 
