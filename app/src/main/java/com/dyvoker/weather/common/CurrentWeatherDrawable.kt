@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import com.dyvoker.weather.R
 import com.dyvoker.weather.core.DarkSkyUtils
 import com.dyvoker.weather.core.data.CurrentWeatherData
 
@@ -33,6 +34,11 @@ class CurrentWeatherDrawable(
         style = Paint.Style.FILL
         color = 0xFF2A2727.toInt()
     }
+    private val size4dp = px(4f)
+    private val size8dp = px(8f)
+    private val addIconSize = (size8dp * 4).toInt()
+    private val addIcon = VectorDrawableCompat
+        .create(context.resources, R.drawable.ic_plus_circle, null)!!
     private var icon = VectorDrawableCompat
         .create(context.resources, DarkSkyUtils.getIconId(data.icon), null)!!
     private val tail = Path()
@@ -58,7 +64,7 @@ class CurrentWeatherDrawable(
         // Draw background + tail.
         val tailTopY = heightPiece * 11f
         val tailBottomY = heightPiece * 12f
-        with (tail) {
+        with(tail) {
             reset()
             moveTo(0f, 0f)
             lineTo(bounds.width().toFloat(), 0f)
@@ -72,15 +78,22 @@ class CurrentWeatherDrawable(
         canvas.drawPath(tail, backgroundPaint)
         canvas.drawPath(tail, strokePaint)
 
-        // TODO Draw add button.
+        // Draw add "button".
+        canvas.save()
+        canvas.translate(
+            bounds.width().toFloat() - addIconSize - size4dp,
+            size4dp
+        )
+        addIcon.setBounds(0, 0, addIconSize, addIconSize)
+        addIcon.draw(canvas)
+        canvas.restore()
 
         // Draw icon and temperature.
-        val padding = px(8f)
         val iconSize = (heightPiece * 4f).toInt()
         val temperatureText = "${data.temperature.toCelsiusInt()}°C"
         temperatureTextPaint.textSize = heightPiece * 3f
         val temperatureWidth = temperatureTextPaint.measureText(temperatureText)
-        val totalWidth = iconSize + padding + temperatureWidth
+        val totalWidth = iconSize + size8dp + temperatureWidth
         val halfWidth = totalWidth / 2f
         val halfHeight = heightPiece * 4f
         val iconYShift = heightPiece * 2f
@@ -89,7 +102,7 @@ class CurrentWeatherDrawable(
         icon.setBounds(0, 0, iconSize, iconSize)
         icon.draw(canvas)
         canvas.translate(
-            iconSize + padding,
+            iconSize + size8dp,
             -iconYShift + halfHeight + temperatureTextPaint.textSize / 2f
         )
         canvas.drawText(
