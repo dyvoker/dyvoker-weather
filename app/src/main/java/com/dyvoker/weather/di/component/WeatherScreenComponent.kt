@@ -2,9 +2,9 @@ package com.dyvoker.weather.di.component
 
 import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
+import com.dyvoker.weather.weather.WeatherActivity
 import com.dyvoker.weather.weather.WeatherContract
 import com.dyvoker.weather.weather.WeatherPresenter
-import com.dyvoker.weather.weather.WeatherActivity
 import dagger.Component
 import dagger.Module
 import dagger.Provides

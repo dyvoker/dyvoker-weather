@@ -53,14 +53,16 @@ class WeatherMapPresenter(
         if (list.isNotEmpty()) {
             val address = list.first()
             val latitude = String.format("%.1f", point.latitude)
-            val longitude = String.format("%.1f",point.longitude)
+            val longitude = String.format("%.1f", point.longitude)
             val city = when {
                 address.locality != null -> address.locality
                 address.adminArea != null -> "${address.adminArea} ($latitude;$longitude)"
                 address.countryName != null -> "${address.countryName} ($latitude;$longitude)"
                 else -> "($latitude;$longitude)"
             }
-            globalRepository.addCity(city, point)
+            GlobalScope.launch(Dispatchers.Main) {
+                globalRepository.addCity(city, point)
+            }
             view.showCityAdded(city)
             return true
         }

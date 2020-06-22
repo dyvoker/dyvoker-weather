@@ -16,7 +16,9 @@ class WeatherPresenter(
 
     override fun attach(view: WeatherContract.View) {
         this.view = view
-        view.showCitiesTabs(globalRepository.getCities())
+        GlobalScope.launch(Dispatchers.Main) {
+            view.showCitiesTabs(globalRepository.getCities())
+        }
     }
 
     override fun updateWeather(coordinates: MapPoint) {
@@ -27,7 +29,9 @@ class WeatherPresenter(
     }
 
     override fun weatherMapViewClosed() {
-        view.showCitiesTabs(globalRepository.getCities())
+        GlobalScope.launch(Dispatchers.Main) {
+            view.showCitiesTabs(globalRepository.getCities())
+        }
     }
 
     override fun clickMapButton() {
