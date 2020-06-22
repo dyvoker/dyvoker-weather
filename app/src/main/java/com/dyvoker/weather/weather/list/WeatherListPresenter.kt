@@ -28,7 +28,7 @@ class WeatherListPresenter(
             when (list.status) {
                 Resource.Status.SUCCESS -> view.showForecast(list.data!!)
                 Resource.Status.ERROR -> view.showLoadingError()
-                Resource.Status.LOADING -> {} //TODO
+                Resource.Status.LOADING -> {} // Someday I will write all the code...
             }
         }
     }

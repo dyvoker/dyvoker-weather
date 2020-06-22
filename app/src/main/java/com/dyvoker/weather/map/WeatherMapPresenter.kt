@@ -37,7 +37,7 @@ class WeatherMapPresenter(
             when (weather.status) {
                 Resource.Status.SUCCESS -> view.showWeatherAtPoint(point, weather.data!!)
                 Resource.Status.ERROR -> view.showLoadingError()
-                Resource.Status.LOADING -> {} //TODO
+                Resource.Status.LOADING -> {} // Someday I will write all the code...
             }
         }
     }
@@ -52,7 +52,7 @@ class WeatherMapPresenter(
                     when (weather.status) {
                         Resource.Status.SUCCESS -> view.showMyLocationWeather(coordinates, weather.data!!)
                         Resource.Status.ERROR -> view.showLoadingError()
-                        Resource.Status.LOADING -> {} //TODO
+                        Resource.Status.LOADING -> {} // Someday I will write all the code...
                     }
                 }
             }

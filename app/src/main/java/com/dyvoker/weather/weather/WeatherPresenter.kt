@@ -28,7 +28,7 @@ class WeatherPresenter(
             when (currentWeather.status) {
                 Resource.Status.SUCCESS -> view.showWeather(currentWeather.data!!)
                 Resource.Status.ERROR -> view.showLoadingError()
-                Resource.Status.LOADING -> {} //TODO
+                Resource.Status.LOADING -> {} // Someday I will write all the code...
             }
         }
     }
