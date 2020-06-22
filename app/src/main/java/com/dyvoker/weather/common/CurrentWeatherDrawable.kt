@@ -14,7 +14,8 @@ import com.dyvoker.weather.core.data.CurrentWeatherData
  */
 class CurrentWeatherDrawable(
     private val context: Context,
-    private var data: CurrentWeatherData
+    private var data: CurrentWeatherData,
+    private val isMarker: Boolean
 ) : Drawable() {
 
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -61,32 +62,34 @@ class CurrentWeatherDrawable(
         // |       1/12 Tail.
         // --------------------------------------------
 
-        // Draw background + tail.
-        val tailTopY = heightPiece * 11f
-        val tailBottomY = heightPiece * 12f
-        with(tail) {
-            reset()
-            moveTo(0f, 0f)
-            lineTo(bounds.width().toFloat(), 0f)
-            lineTo(bounds.width().toFloat(), tailTopY)
-            lineTo(centerX + heightPiece, tailTopY)
-            lineTo(centerX, tailBottomY)
-            lineTo(centerX - heightPiece, tailTopY)
-            lineTo(0f, tailTopY)
-            close()
+        if (isMarker) {
+            // Draw background + tail.
+            val tailTopY = heightPiece * 11f
+            val tailBottomY = heightPiece * 12f
+            with(tail) {
+                reset()
+                moveTo(0f, 0f)
+                lineTo(bounds.width().toFloat(), 0f)
+                lineTo(bounds.width().toFloat(), tailTopY)
+                lineTo(centerX + heightPiece, tailTopY)
+                lineTo(centerX, tailBottomY)
+                lineTo(centerX - heightPiece, tailTopY)
+                lineTo(0f, tailTopY)
+                close()
+            }
+            canvas.drawPath(tail, backgroundPaint)
+            canvas.drawPath(tail, strokePaint)
+            
+            // Draw add "button".
+            canvas.save()
+            canvas.translate(
+                bounds.width().toFloat() - addIconSize - size4dp,
+                size4dp
+            )
+            addIcon.setBounds(0, 0, addIconSize, addIconSize)
+            addIcon.draw(canvas)
+            canvas.restore()
         }
-        canvas.drawPath(tail, backgroundPaint)
-        canvas.drawPath(tail, strokePaint)
-
-        // Draw add "button".
-        canvas.save()
-        canvas.translate(
-            bounds.width().toFloat() - addIconSize - size4dp,
-            size4dp
-        )
-        addIcon.setBounds(0, 0, addIconSize, addIconSize)
-        addIcon.draw(canvas)
-        canvas.restore()
 
         // Draw icon and temperature.
         val iconSize = (heightPiece * 4f).toInt()

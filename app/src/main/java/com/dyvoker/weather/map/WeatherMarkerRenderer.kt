@@ -13,7 +13,7 @@ class WeatherMarkerRenderer(
     context: Context,
     data: CurrentWeatherData
 ) {
-    private val currentWeatherDrawable = CurrentWeatherDrawable(context, data)
+    private val currentWeatherDrawable = CurrentWeatherDrawable(context, data, isMarker = true)
 
     fun setCurrentWeatherData(newData: CurrentWeatherData) {
         currentWeatherDrawable.setData(newData)

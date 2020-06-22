@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
-import com.dyvoker.weather.common.toCelsiusInt
-import com.dyvoker.weather.core.DarkSkyUtils
 import com.dyvoker.weather.core.data.CurrentWeatherData
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.databinding.ActivityWeatherBinding
@@ -75,9 +73,7 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
 
     @SuppressLint("SetTextI18n")
     override fun showWeather(data: CurrentWeatherData) {
-        binding.currentIcon.setImageResource(DarkSkyUtils.getIconId(data.icon))
-        binding.currentTemperature.text = "${data.temperature.toCelsiusInt()}°C"
-        binding.currentStatus.text = data.summary
+        binding.currentWeather.setCurrentWeatherData(data)
     }
 
     override fun showCitiesTabs(cities: Map<String, MapPoint>) {
