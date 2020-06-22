@@ -32,7 +32,6 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
 
     @Inject
     lateinit var presenter: WeatherListContract.Presenter
-    private lateinit var coordinates: MapPoint
     private val itemsProvider = RVArrayListItemsProvider<DailyWeatherData>()
 
     override fun onCreateView(
@@ -50,10 +49,6 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
             // A straight crash will motivate developers to write better code!
             throw RuntimeException("arguments is not set for this WeatherListFragment!")
         }
-        coordinates = MapPoint(
-            arguments!!.getDouble(latitudeKey),
-            arguments!!.getDouble(longitudeKey)
-        )
         binding.recyclerView.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
@@ -95,12 +90,18 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
         val appComponent = App.appComponent()
         DaggerWeatherListScreenComponent.factory().create(appComponent).inject(this)
 
+        presenter.initCoordinates(
+            MapPoint(
+                arguments!!.getDouble(latitudeKey),
+                arguments!!.getDouble(longitudeKey)
+            )
+        )
         presenter.attach(this)
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.updateForecast(coordinates)
+        presenter.updateForecast()
     }
 
     override fun onDestroyView() {

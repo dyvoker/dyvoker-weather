@@ -2,6 +2,8 @@ package com.dyvoker.weather.map
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Geocoder
+import com.dyvoker.weather.common.getCurrentLocale
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
@@ -20,18 +22,13 @@ class WeatherMapPresenter(
     private lateinit var view: WeatherMapContract.View
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
-
-    override fun subscribe() {
-    }
-
-    override fun unsubscribe() {
-    }
+    private val geocoder = Geocoder(context, context.getCurrentLocale())
 
     override fun attach(view: WeatherMapContract.View) {
         this.view = view
     }
 
-    override fun updateWeatherAtPoint(point: MapPoint) {
+    override fun onMapClick(point: MapPoint) {
         GlobalScope.launch(Dispatchers.Main) {
             val currentWeather = repository.getCurrentWeather(point)
             view.showWeatherAtPoint(point, currentWeather)
@@ -51,8 +48,20 @@ class WeatherMapPresenter(
         }
     }
 
-    override fun addCity(cityName: String, point: MapPoint) {
-        globalRepository.addCity(cityName, point)
-        view.showToast("Город добавлен!")
+    override fun onMarkerClick(point: MapPoint): Boolean {
+        val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+        if (list.isNotEmpty()) {
+            val address = list.first()
+            val city = when {
+                address.locality != null -> address.locality
+                address.adminArea != null -> "${address.adminArea} (${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+                address.countryName != null -> "${address.countryName} (${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+                else -> "(${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+            }
+            globalRepository.addCity(city, point)
+            view.showCityAdded(city)
+            return true
+        }
+        return false
     }
 }

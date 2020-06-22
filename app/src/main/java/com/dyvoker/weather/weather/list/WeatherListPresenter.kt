@@ -6,29 +6,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-/**
- * I decided to use this approach - Presenter + Presenter.View.
- * There is a problem with naming - name "View" is already using by Android.
- * It's a kind of compromise.
- * On my previous job, we used the name "Widget" for View from MVP, but it also uses by Android :)
- */
 class WeatherListPresenter(
     private val repository: WeatherRepository
 ) : WeatherListContract.Presenter {
 
     private lateinit var view: WeatherListContract.View
+    private lateinit var coordinates: MapPoint
 
-    override fun subscribe() {
-    }
-
-    override fun unsubscribe() {
+    override fun initCoordinates(point: MapPoint) {
+        coordinates = point
     }
 
     override fun attach(view: WeatherListContract.View) {
         this.view = view
     }
 
-    override fun updateForecast(coordinates: MapPoint) {
+    override fun updateForecast() {
         GlobalScope.launch(Dispatchers.Main) {
             val list = repository.getForecastWeather(coordinates)
             view.showForecast(list)

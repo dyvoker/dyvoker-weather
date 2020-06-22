@@ -19,12 +19,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
 
 
-class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
+class WeatherActivity : AppCompatActivity(), WeatherContract.View {
 
     private lateinit var binding: ActivityWeatherBinding
 
     @Inject
-    lateinit var presenter: CurrentWeatherContract.Presenter
+    lateinit var presenter: WeatherContract.Presenter
 
     lateinit var citiesAdapter: CitiesAdapter
 
@@ -38,10 +38,7 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
             inflateMenu(R.menu.menu_main_activity)
             val checkOnMap: View = findViewById(R.id.action_check_on_map)
             checkOnMap.setOnClickListener {
-                startActivityForResult(
-                    Intent(this@WeatherActivity, WeatherMapActivity::class.java),
-                    weatherMapRequestCode
-                )
+                presenter.clickMapButton()
             }
         }
 
@@ -84,6 +81,13 @@ class WeatherActivity : AppCompatActivity(), CurrentWeatherContract.View {
 
     override fun showCitiesTabs(cities: Map<String, MapPoint>) {
         citiesAdapter.cities = cities
+    }
+
+    override fun openWeatherMap() {
+        startActivityForResult(
+            Intent(this@WeatherActivity, WeatherMapActivity::class.java),
+            weatherMapRequestCode
+        )
     }
 
     companion object {

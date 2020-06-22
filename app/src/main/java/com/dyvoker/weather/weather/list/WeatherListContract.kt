@@ -7,7 +7,8 @@ import com.dyvoker.weather.core.data.DailyWeatherData
 class WeatherListContract {
 
     interface Presenter : BaseContract.Presenter<View> {
-        fun updateForecast(coordinates: MapPoint)
+        fun initCoordinates(point: MapPoint)
+        fun updateForecast()
     }
 
     interface View : BaseContract.View {

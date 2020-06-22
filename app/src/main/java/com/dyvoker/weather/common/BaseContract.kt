@@ -5,8 +5,6 @@ package com.dyvoker.weather.common
  */
 class BaseContract {
     interface Presenter<in T> {
-        fun subscribe()
-        fun unsubscribe()
         fun attach(view: T)
     }
 
