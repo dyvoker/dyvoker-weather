@@ -82,7 +82,8 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
     }
 
     override fun showCityAdded(city: String) {
-        Toast.makeText(this, "$city добавлен!", Toast.LENGTH_LONG).show()
+        val added = resources.getString(R.string.city_added)
+        Toast.makeText(this, "$city $added", Toast.LENGTH_LONG).show()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
