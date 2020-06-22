@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.Geocoder
 import com.dyvoker.weather.common.getCurrentLocale
 import com.dyvoker.weather.core.data.MapPoint
+import com.dyvoker.weather.core.data.Resource
 import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,8 +31,12 @@ class WeatherMapPresenter(
 
     override fun onMapClick(point: MapPoint) {
         GlobalScope.launch(Dispatchers.Main) {
-            val currentWeather = repository.getCurrentWeather(point)
-            view.showWeatherAtPoint(point, currentWeather)
+            val weather = repository.getCurrentWeather(point)
+            when (weather.status) {
+                Resource.Status.SUCCESS -> view.showWeatherAtPoint(point, weather.data!!)
+                Resource.Status.ERROR -> {} //TODO
+                Resource.Status.LOADING -> {} //TODO
+            }
         }
     }
 
@@ -41,8 +46,12 @@ class WeatherMapPresenter(
             it.result?.run {
                 GlobalScope.launch(Dispatchers.Main) {
                     val coordinates = MapPoint(latitude, longitude)
-                    val currentWeather = repository.getCurrentWeather(coordinates)
-                    view.showMyLocationWeather(coordinates, currentWeather)
+                    val weather = repository.getCurrentWeather(coordinates)
+                    when (weather.status) {
+                        Resource.Status.SUCCESS -> view.showMyLocationWeather(coordinates, weather.data!!)
+                        Resource.Status.ERROR -> {} //TODO
+                        Resource.Status.LOADING -> {} //TODO
+                    }
                 }
             }
         }

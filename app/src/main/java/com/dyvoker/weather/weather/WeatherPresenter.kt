@@ -1,6 +1,7 @@
 package com.dyvoker.weather.weather
 
 import com.dyvoker.weather.core.data.MapPoint
+import com.dyvoker.weather.core.data.Resource
 import com.dyvoker.weather.core.repository.GlobalRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,11 @@ class WeatherPresenter(
     override fun updateWeather(coordinates: MapPoint) {
         GlobalScope.launch(Dispatchers.Main) {
             val currentWeather = repository.getCurrentWeather(coordinates)
-            view.showWeather(currentWeather)
+            when (currentWeather.status) {
+                Resource.Status.SUCCESS -> view.showWeather(currentWeather.data!!)
+                Resource.Status.ERROR -> {} //TODO
+                Resource.Status.LOADING -> {} //TODO
+            }
         }
     }
 
