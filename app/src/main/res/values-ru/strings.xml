@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dyvoker Погода</string>
+    <string name="check_on_map">Посмотреть на карте</string>
+    <string name="weather_map">Карта погоды</string>
+    <string name="city_added">добавлен!</string>
+    <string name="rationale_location">Приложению требуется доступ к Вашей геолокации, чтобы показать её на карте.</string>
+</resources>
