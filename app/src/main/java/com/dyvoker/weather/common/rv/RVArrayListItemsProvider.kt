@@ -1,5 +1,6 @@
 package com.dyvoker.weather.common.rv
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class RVArrayListItemsProvider<I>(
     private val itemPredicate: ItemPredicate<I> = ReferenceItemPredicate()
 ) : RVItemsProvider<I> {

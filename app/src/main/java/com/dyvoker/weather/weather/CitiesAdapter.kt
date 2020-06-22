@@ -10,7 +10,6 @@ import com.dyvoker.weather.weather.list.WeatherListFragment
 class CitiesAdapter(fragmentActivity : FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
     var cities: Map<String, MapPoint> = mapOf()
-        get () = field
         set (value) {
             field = value
             notifyDataSetChanged()

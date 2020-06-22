@@ -40,7 +40,7 @@ class GlobalRepository(
 
     companion object {
         const val citiesKey = "cities_key"
-        val citiesDefault = mutableMapOf(
+        private val citiesDefault = mutableMapOf(
             "Санкт-Петербург" to MapPoint(59.950015, 30.316599),
             "Москва" to MapPoint(55.753913, 37.620836)
         )
