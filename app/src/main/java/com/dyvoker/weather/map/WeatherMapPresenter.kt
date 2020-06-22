@@ -52,11 +52,13 @@ class WeatherMapPresenter(
         val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
         if (list.isNotEmpty()) {
             val address = list.first()
+            val latitude = String.format("%.1f", point.latitude)
+            val longitude = String.format("%.1f",point.longitude)
             val city = when {
                 address.locality != null -> address.locality
-                address.adminArea != null -> "${address.adminArea} (${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
-                address.countryName != null -> "${address.countryName} (${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
-                else -> "(${String.format("%.1f", point.latitude)};${String.format("%.1f", point.longitude)})"
+                address.adminArea != null -> "${address.adminArea} ($latitude;$longitude)"
+                address.countryName != null -> "${address.countryName} ($latitude;$longitude)"
+                else -> "($latitude;$longitude)"
             }
             globalRepository.addCity(city, point)
             view.showCityAdded(city)
