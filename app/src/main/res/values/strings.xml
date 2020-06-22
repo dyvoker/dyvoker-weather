@@ -4,6 +4,8 @@
     <string name="weather_map">Weather map</string>
 
     <string name="city_added">added!</string>
+    <string name="loading_error">Loading error!</string>
+    <string name="geolocation_error">Geolocation loading error!</string>
 
     <string name="rationale_location">App needs access to your geolocation to show it.</string>
 </resources>

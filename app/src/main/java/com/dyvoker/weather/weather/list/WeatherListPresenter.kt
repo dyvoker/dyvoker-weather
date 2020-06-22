@@ -27,7 +27,7 @@ class WeatherListPresenter(
             val list = repository.getForecastWeather(coordinates)
             when (list.status) {
                 Resource.Status.SUCCESS -> view.showForecast(list.data!!)
-                Resource.Status.ERROR -> {} //TODO
+                Resource.Status.ERROR -> view.showLoadingError()
                 Resource.Status.LOADING -> {} //TODO
             }
         }

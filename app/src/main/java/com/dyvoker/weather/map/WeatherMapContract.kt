@@ -16,5 +16,7 @@ class WeatherMapContract {
         fun showWeatherAtPoint(point: MapPoint, data: CurrentWeatherData)
         fun showMyLocationWeather(point: MapPoint, data: CurrentWeatherData)
         fun showCityAdded(city: String)
+        fun showLoadingError()
+        fun showGeolocationError()
     }
 }

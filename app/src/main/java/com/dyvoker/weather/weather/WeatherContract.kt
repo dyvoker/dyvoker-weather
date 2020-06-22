@@ -16,5 +16,6 @@ class WeatherContract {
         fun showWeather(data: CurrentWeatherData)
         fun showCitiesTabs(cities: Map<String, MapPoint>)
         fun openWeatherMap()
+        fun showLoadingError()
     }
 }

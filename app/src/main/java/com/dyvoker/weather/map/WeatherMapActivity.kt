@@ -86,6 +86,14 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
         Toast.makeText(this, "$city $added", Toast.LENGTH_LONG).show()
     }
 
+    override fun showLoadingError() {
+        Toast.makeText(this, R.string.loading_error, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showGeolocationError() {
+        Toast.makeText(this, R.string.geolocation_error, Toast.LENGTH_LONG).show()
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.setOnMapClickListener {

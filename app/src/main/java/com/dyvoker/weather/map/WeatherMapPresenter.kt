@@ -2,6 +2,7 @@ package com.dyvoker.weather.map
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Address
 import android.location.Geocoder
 import com.dyvoker.weather.common.getCurrentLocale
 import com.dyvoker.weather.core.data.MapPoint
@@ -13,6 +14,7 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class WeatherMapPresenter(
     context: Context,
@@ -34,7 +36,7 @@ class WeatherMapPresenter(
             val weather = repository.getCurrentWeather(point)
             when (weather.status) {
                 Resource.Status.SUCCESS -> view.showWeatherAtPoint(point, weather.data!!)
-                Resource.Status.ERROR -> {} //TODO
+                Resource.Status.ERROR -> view.showLoadingError()
                 Resource.Status.LOADING -> {} //TODO
             }
         }
@@ -49,7 +51,7 @@ class WeatherMapPresenter(
                     val weather = repository.getCurrentWeather(coordinates)
                     when (weather.status) {
                         Resource.Status.SUCCESS -> view.showMyLocationWeather(coordinates, weather.data!!)
-                        Resource.Status.ERROR -> {} //TODO
+                        Resource.Status.ERROR -> view.showLoadingError()
                         Resource.Status.LOADING -> {} //TODO
                     }
                 }
@@ -58,7 +60,13 @@ class WeatherMapPresenter(
     }
 
     override fun onMarkerClick(point: MapPoint): Boolean {
-        val list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+        val list: List<Address>?
+        try {
+            list = geocoder.getFromLocation(point.latitude, point.longitude, 1)
+        } catch (e: IOException) {
+            view.showGeolocationError()
+            return false
+        }
         if (list.isNotEmpty()) {
             val address = list.first()
             val latitude = String.format("%.1f", point.latitude)

@@ -5,4 +5,6 @@
     <string name="weather_map">Карта погоды</string>
     <string name="city_added">добавлен!</string>
     <string name="rationale_location">Приложению требуется доступ к Вашей геолокации, чтобы показать её на карте.</string>
+    <string name="loading_error">Ошибка загрузки!</string>
+    <string name="geolocation_error">Ошибка получения геолокации!</string>
 </resources>

@@ -13,5 +13,6 @@ class WeatherListContract {
 
     interface View : BaseContract.View {
         fun showForecast(list: List<DailyWeatherData>)
+        fun showLoadingError()
     }
 }

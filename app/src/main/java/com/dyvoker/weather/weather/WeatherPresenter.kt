@@ -27,7 +27,7 @@ class WeatherPresenter(
             val currentWeather = repository.getCurrentWeather(coordinates)
             when (currentWeather.status) {
                 Resource.Status.SUCCESS -> view.showWeather(currentWeather.data!!)
-                Resource.Status.ERROR -> {} //TODO
+                Resource.Status.ERROR -> view.showLoadingError()
                 Resource.Status.LOADING -> {} //TODO
             }
         }

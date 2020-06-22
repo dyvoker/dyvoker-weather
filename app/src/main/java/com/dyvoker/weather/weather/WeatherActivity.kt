@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.dyvoker.weather.R
@@ -88,6 +89,10 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
             Intent(this@WeatherActivity, WeatherMapActivity::class.java),
             weatherMapRequestCode
         )
+    }
+
+    override fun showLoadingError() {
+        Toast.makeText(this, R.string.loading_error, Toast.LENGTH_LONG).show()
     }
 
     companion object {
