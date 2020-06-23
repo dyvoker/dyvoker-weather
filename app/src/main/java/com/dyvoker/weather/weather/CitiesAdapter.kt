@@ -7,10 +7,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.weather.list.WeatherListFragment
 
-class CitiesAdapter(fragmentActivity : FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+class CitiesAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
     var cities: Map<String, MapPoint> = mapOf()
-        set (value) {
+        set(value) {
             field = value
             notifyDataSetChanged()
         }
@@ -27,4 +27,6 @@ class CitiesAdapter(fragmentActivity : FragmentActivity) : FragmentStateAdapter(
         fragment.arguments = bundle
         return fragment
     }
+
+    fun getShowedCityNameByPosition(position: Int) = cities.keys.elementAt(position)
 }

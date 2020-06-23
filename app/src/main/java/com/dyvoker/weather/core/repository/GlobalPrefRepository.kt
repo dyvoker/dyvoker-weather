@@ -28,6 +28,11 @@ class GlobalPrefRepository(
         saveCities()
     }
 
+    override suspend fun removeCity(cityName: String) {
+        cities.remove(cityName)
+        saveCities()
+    }
+
     override suspend fun saveCities() {
         prefs.edit(true) {
             putStringSet(

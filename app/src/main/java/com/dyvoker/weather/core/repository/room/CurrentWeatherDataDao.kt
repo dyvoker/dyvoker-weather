@@ -14,7 +14,7 @@ interface CurrentWeatherDataDao {
     @Insert
     suspend fun insert(vararg weather: CurrentWeatherData)
 
-    @Query("DELETE FROM currentWeatherData WHERE :currentMillis - creationTimestamp > 60 * 60 * 1000")
+    @Query("DELETE FROM currentWeatherData WHERE :currentMillis - creationTimestamp > 3600000")
     suspend fun deleteOld(currentMillis: Long)
 }
 

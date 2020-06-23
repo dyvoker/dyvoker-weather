@@ -41,6 +41,11 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
             }
         }
 
+        // DI.
+        val appComponent = App.appComponent()
+        DaggerWeatherScreenComponent.factory().create(appComponent).inject(this)
+        presenter.attach(this)
+
         citiesAdapter = CitiesAdapter(this)
         binding.viewPager.adapter = citiesAdapter
         binding.viewPager.offscreenPageLimit = 3 // Prevents destroying fragments.
@@ -52,16 +57,21 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                val coordinates = citiesAdapter.cities.values.elementAt(position)
-                presenter.updateWeather(coordinates)
+                if (citiesAdapter.cities.isNotEmpty()) {
+                    val coordinates = citiesAdapter.cities.values.elementAt(position)
+                    presenter.updateWeather(coordinates)
+                }
             }
         })
 
-        // DI.
-        val appComponent = App.appComponent()
-        DaggerWeatherScreenComponent.factory().create(appComponent).inject(this)
-
-        presenter.attach(this)
+        binding.removeCity.setOnClickListener {
+            val position = binding.tabLayout.selectedTabPosition
+            if (position > -1) {
+                presenter.removeCityClick(
+                    citiesAdapter.getShowedCityNameByPosition(position)
+                )
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -14,6 +14,6 @@ interface DailyWeatherDataDao {
     @Insert
     suspend fun insert(weather: List<DailyWeatherData>)
 
-    @Query("DELETE FROM dailyWeatherData WHERE :currentMillis - creationTimestamp > 60 * 60 * 1000")
+    @Query("DELETE FROM dailyWeatherData WHERE :currentMillis - creationTimestamp > 3600000")
     suspend fun deleteOld(currentMillis: Long)
 }

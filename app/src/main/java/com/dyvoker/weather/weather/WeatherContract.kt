@@ -10,6 +10,7 @@ class WeatherContract {
         fun updateWeather(coordinates: MapPoint)
         fun weatherMapViewClosed()
         fun clickMapButton()
+        fun removeCityClick(cityName: String)
     }
 
     interface View : BaseContract.View {

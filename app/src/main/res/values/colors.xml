@@ -5,4 +5,7 @@
 
     <color name="white">#ffffff</color>
     <color name="warm_black">#2a2727</color>
+
+    <color name="ripple_color">#40000000</color>
+    <color name="ripple_color_old">#0F000000</color>
 </resources>

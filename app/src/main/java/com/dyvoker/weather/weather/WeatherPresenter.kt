@@ -42,4 +42,11 @@ class WeatherPresenter(
     override fun clickMapButton() {
         view.openWeatherMap()
     }
+
+    override fun removeCityClick(cityName: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            globalRepository.removeCity(cityName)
+            view.showCitiesTabs(globalRepository.getCities())
+        }
+    }
 }
