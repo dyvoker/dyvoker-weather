@@ -1,10 +1,8 @@
 package com.dyvoker.weather.core.repository
 
 import android.content.Context
-import androidx.core.content.edit
+import com.dyvoker.weather.common.editAwait
 import com.dyvoker.weather.core.data.MapPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class GlobalPrefRepository(
     context: Context
@@ -35,8 +33,8 @@ class GlobalPrefRepository(
         saveCities()
     }
 
-    override suspend fun saveCities() = withContext(Dispatchers.Default) {
-        prefs.edit(true) {
+    override suspend fun saveCities() {
+        prefs.editAwait(true) {
             putStringSet(
                 citiesKey,
                 cities.map {
