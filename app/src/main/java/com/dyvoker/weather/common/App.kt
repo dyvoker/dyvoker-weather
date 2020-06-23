@@ -12,9 +12,8 @@ class App: Application() {
 
     companion object {
         private lateinit var instance: App
-        private lateinit var appComponent: AppComponent
-
-        fun appComponent() = appComponent
+        lateinit var appComponent: AppComponent private set
+        val appContext: Context get () = instance.applicationContext
     }
 
     override fun attachBaseContext(base: Context) {

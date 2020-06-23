@@ -49,8 +49,7 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
         }
 
         // DI.
-        val appComponent = App.appComponent()
-        DaggerWeatherMapScreenComponent.factory().create(appComponent).inject(this)
+        DaggerWeatherMapScreenComponent.factory().create(App.appComponent).inject(this)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment

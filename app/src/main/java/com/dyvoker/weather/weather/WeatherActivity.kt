@@ -42,8 +42,7 @@ class WeatherActivity : AppCompatActivity(), WeatherContract.View {
         }
 
         // DI.
-        val appComponent = App.appComponent()
-        DaggerWeatherScreenComponent.factory().create(appComponent).inject(this)
+        DaggerWeatherScreenComponent.factory().create(App.appComponent).inject(this)
         presenter.attach(this)
 
         citiesAdapter = CitiesAdapter(this)

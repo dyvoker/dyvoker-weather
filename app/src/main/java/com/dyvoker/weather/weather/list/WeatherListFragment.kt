@@ -77,7 +77,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
                     holder.temperature.text = "${low}..${high}°C"
                     holder.icon.setImageResource(DarkSkyUtils.getIconId(item.icon))
                     calendar.timeInMillis = item.timestamp * 1000L
-                    val locale = requireContext().getCurrentLocale()
+                    val locale = App.appContext.getCurrentLocale()
                     val dayOfWeek = String.format(locale, "%1\$ta", calendar).toUpperCase(locale)
                     val dayOfMonth = String.format(locale, "%1\$te", calendar)
                     val month = String.format(locale, "%1\$tB", calendar).capitalize(locale)
@@ -88,8 +88,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
         )
 
         // DI.
-        val appComponent = App.appComponent()
-        DaggerWeatherListScreenComponent.factory().create(appComponent).inject(this)
+        DaggerWeatherListScreenComponent.factory().create(App.appComponent).inject(this)
 
         presenter.initCoordinates(
             MapPoint(
@@ -116,7 +115,7 @@ class WeatherListFragment : Fragment(), WeatherListContract.View {
     }
 
     override fun showLoadingError() {
-        Toast.makeText(requireContext(), R.string.loading_error, Toast.LENGTH_LONG).show()
+        Toast.makeText(App.appContext, R.string.loading_error, Toast.LENGTH_LONG).show()
     }
 
     companion object {
