@@ -13,13 +13,15 @@ interface DarkSkyApiService {
     fun getForecastWeather(
         @Path("latitude") latitude: String,
         @Path("longitude") longitude: String,
-        @Query("lang") locale: String = "en"
+        @Query("lang") locale: String = "en",
+        @Query("exclude") exclude: String = "currently,minutely,hourly,alerts,flags"
     ): Call<DailyForecastResponse>
 
     @GET("forecast/API_KEY/{latitude},{longitude}")
     fun getCurrentWeather(
         @Path("latitude") latitude: String,
         @Path("longitude") longitude: String,
-        @Query("lang") locale: String = "en"
+        @Query("lang") locale: String = "en",
+        @Query("exclude") exclude: String = "minutely,hourly,daily,alerts,flags"
     ): Call<CurrentWeatherResponse>
 }
