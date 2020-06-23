@@ -1,11 +1,13 @@
 # dyvoker-weather
 [![API](https://img.shields.io/badge/API-19%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=19)
+![App icon](https://raw.githubusercontent.com/dyvoker/dyvoker-weather/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp)
+
 
 This app has production-ready quality.
 
 ## Technologies
 - MVP
-- Kotlin 100% (+ Coroutines)
+- Kotlin 100% (+Coroutines)
 - AndroidX
 - Dagger 2 (Dependent Components)
 - Room
