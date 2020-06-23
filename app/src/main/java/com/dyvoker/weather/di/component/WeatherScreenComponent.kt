@@ -1,6 +1,6 @@
 package com.dyvoker.weather.di.component
 
-import com.dyvoker.weather.core.repository.GlobalRepository
+import com.dyvoker.weather.core.repository.CityRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.dyvoker.weather.weather.WeatherActivity
 import com.dyvoker.weather.weather.WeatherContract
@@ -21,9 +21,9 @@ class WeatherScreenModule {
     @Provides
     fun providePresenter(
         repository: WeatherRepository,
-        globalRepository: GlobalRepository
+        cityRepository: CityRepository
     ): WeatherContract.Presenter =
-        WeatherPresenter(repository, globalRepository)
+        WeatherPresenter(repository, cityRepository)
 }
 
 @WeatherScreenScope

@@ -2,7 +2,7 @@ package com.dyvoker.weather.weather
 
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.core.data.Resource
-import com.dyvoker.weather.core.repository.GlobalRepository
+import com.dyvoker.weather.core.repository.CityRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class WeatherPresenter(
     private val repository: WeatherRepository,
-    private val globalRepository: GlobalRepository
+    private val cityRepository: CityRepository
 ) : WeatherContract.Presenter {
 
     private lateinit var view: WeatherContract.View
@@ -18,7 +18,7 @@ class WeatherPresenter(
     override fun attach(view: WeatherContract.View) {
         this.view = view
         GlobalScope.launch(Dispatchers.Main) {
-            view.showCitiesTabs(globalRepository.getCities())
+            view.showCitiesTabs(cityRepository.getCities())
         }
     }
 
@@ -35,7 +35,7 @@ class WeatherPresenter(
 
     override fun weatherMapViewClosed() {
         GlobalScope.launch(Dispatchers.Main) {
-            view.showCitiesTabs(globalRepository.getCities())
+            view.showCitiesTabs(cityRepository.getCities())
         }
     }
 
@@ -45,8 +45,8 @@ class WeatherPresenter(
 
     override fun removeCityClick(cityName: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            globalRepository.removeCity(cityName)
-            view.showCitiesTabs(globalRepository.getCities())
+            cityRepository.removeCity(cityName)
+            view.showCitiesTabs(cityRepository.getCities())
         }
     }
 }

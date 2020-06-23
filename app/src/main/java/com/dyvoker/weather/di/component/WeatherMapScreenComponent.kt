@@ -1,7 +1,8 @@
 package com.dyvoker.weather.di.component
 
 import android.content.Context
-import com.dyvoker.weather.core.repository.GlobalRepository
+import com.dyvoker.weather.core.AppConfig
+import com.dyvoker.weather.core.repository.CityRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.dyvoker.weather.map.WeatherMapActivity
 import com.dyvoker.weather.map.WeatherMapContract
@@ -22,10 +23,11 @@ class WeatherMapScreenModule {
     @Provides
     fun providePresenter(
         context: Context,
+        appConfig: AppConfig,
         repository: WeatherRepository,
-        globalRepository: GlobalRepository
+        cityRepository: CityRepository
     ): WeatherMapContract.Presenter =
-        WeatherMapPresenter(context, repository, globalRepository)
+        WeatherMapPresenter(context, appConfig, repository, cityRepository)
 }
 
 @WeatherMapScreenScope

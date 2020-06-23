@@ -1,25 +1,29 @@
 package com.dyvoker.weather.map
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import com.dyvoker.weather.common.getCurrentLocale
+import com.dyvoker.weather.core.AppConfig
 import com.dyvoker.weather.core.data.MapPoint
 import com.dyvoker.weather.core.data.Resource
-import com.dyvoker.weather.core.repository.GlobalRepository
+import com.dyvoker.weather.core.repository.CityRepository
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import pub.devrel.easypermissions.EasyPermissions
 import java.io.IOException
 
 class WeatherMapPresenter(
-    context: Context,
+    private val context: Context,
+    private val appConfig: AppConfig,
     private val repository: WeatherRepository,
-    private val globalRepository: GlobalRepository
+    private val cityRepository: CityRepository
 ) : WeatherMapContract.Presenter {
 
     private lateinit var view: WeatherMapContract.View
@@ -29,6 +33,17 @@ class WeatherMapPresenter(
 
     override fun attach(view: WeatherMapContract.View) {
         this.view = view
+        view.setOwnMyLocationButtonVisible(!appConfig.useGoogleMapMyLocationButton)
+    }
+
+    override fun onGoogleMapReady() {
+        if (appConfig.useGoogleMapMyLocationButton) {
+            if (hasLocationPermission()) {
+                view.setGoogleMapsMyLocationButtonVisible(true)
+            } else {
+                view.requestLocationPermission()
+            }
+        }
     }
 
     override fun onMapClick(point: MapPoint) {
@@ -42,20 +57,25 @@ class WeatherMapPresenter(
         }
     }
 
+    override fun onOwnMyLocationButtonClick() {
+        if (hasLocationPermission()) {
+            goToMyLocation(true)
+        } else {
+            view.requestLocationPermission()
+        }
+    }
+
     @SuppressLint("MissingPermission")
-    override fun goToMyLocation() {
-        fusedLocationClient.lastLocation.addOnCompleteListener {
-            it.result?.run {
-                GlobalScope.launch(Dispatchers.Main) {
-                    val coordinates = MapPoint(latitude, longitude)
-                    val weather = repository.getCurrentWeather(coordinates)
-                    when (weather.status) {
-                        Resource.Status.SUCCESS -> view.showMyLocationWeather(coordinates, weather.data!!)
-                        Resource.Status.ERROR -> view.showLoadingError()
-                        Resource.Status.LOADING -> {} // Someday I will write all the code...
-                    }
-                }
-            }
+    override fun onGoogleMapsMyLocationButtonClick() {
+        goToMyLocation(false)
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun locationPermissionGranted() {
+        if (appConfig.useGoogleMapMyLocationButton) {
+            view.setGoogleMapsMyLocationButtonVisible(true)
+        } else {
+            goToMyLocation(true)
         }
     }
 
@@ -78,11 +98,34 @@ class WeatherMapPresenter(
                 else -> "($latitude;$longitude)"
             }
             GlobalScope.launch(Dispatchers.Main) {
-                globalRepository.addCity(city, point)
+                cityRepository.addCity(city, point)
             }
             view.showCityAdded(city)
             return true
         }
         return false
     }
+
+    @SuppressLint("MissingPermission")
+    private fun goToMyLocation(moveCamera: Boolean) {
+        fusedLocationClient.lastLocation.addOnCompleteListener {
+            it.result?.run {
+                GlobalScope.launch(Dispatchers.Main) {
+                    val coordinates = MapPoint(latitude, longitude)
+                    if (moveCamera) {
+                        view.moveGoogleMapsCamera(coordinates)
+                    }
+                    val weather = repository.getCurrentWeather(coordinates)
+                    when (weather.status) {
+                        Resource.Status.SUCCESS -> view.showWeatherAtPoint(coordinates, weather.data!!)
+                        Resource.Status.ERROR -> view.showLoadingError()
+                        Resource.Status.LOADING -> {} // Someday I will write all the code...
+                    }
+                }
+            }
+        }
+    }
+
+    private fun hasLocationPermission() =
+        EasyPermissions.hasPermissions(context, Manifest.permission.ACCESS_FINE_LOCATION)
 }

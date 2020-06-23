@@ -4,9 +4,9 @@ import android.content.Context
 import com.dyvoker.weather.common.editAwait
 import com.dyvoker.weather.core.data.MapPoint
 
-class GlobalPrefRepository(
+class CityPrefRepository(
     context: Context
-) : GlobalRepository {
+) : CityRepository {
 
     private val prefs = context
         .getSharedPreferences("global_prefs", Context.MODE_PRIVATE)

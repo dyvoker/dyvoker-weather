@@ -3,8 +3,8 @@ package com.dyvoker.weather.di.module
 import android.content.Context
 import androidx.room.Room
 import com.dyvoker.weather.core.DarkSkyApiService
-import com.dyvoker.weather.core.repository.GlobalPrefRepository
-import com.dyvoker.weather.core.repository.GlobalRepository
+import com.dyvoker.weather.core.repository.CityPrefRepository
+import com.dyvoker.weather.core.repository.CityRepository
 import com.dyvoker.weather.core.repository.room.AppDatabase
 import com.dyvoker.weather.core.repository.WeatherRepository
 import com.dyvoker.weather.weather.WeatherApiRepository
@@ -39,6 +39,6 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideGlobalRepository(context: Context) : GlobalRepository =
-        GlobalPrefRepository(context)
+    fun provideGlobalRepository(context: Context) : CityRepository =
+        CityPrefRepository(context)
 }

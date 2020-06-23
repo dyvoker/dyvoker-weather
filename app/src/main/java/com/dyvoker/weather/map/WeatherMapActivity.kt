@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.dyvoker.weather.R
 import com.dyvoker.weather.common.App
 import com.dyvoker.weather.core.data.CurrentWeatherData
@@ -57,7 +58,7 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
         presenter.attach(this)
 
         binding.myLocation.setOnClickListener {
-            goToMyLocation()
+            presenter.onOwnMyLocationButtonClick()
         }
     }
 
@@ -71,13 +72,35 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
             .onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
+    @SuppressLint("MissingPermission")
+    override fun setGoogleMapsMyLocationButtonVisible(visible: Boolean) {
+        map.isMyLocationEnabled = visible
+    }
+
+    override fun setOwnMyLocationButtonVisible(visible: Boolean) {
+        binding.myLocation.isVisible = visible
+    }
+
+    override fun requestLocationPermission() {
+        EasyPermissions.requestPermissions(
+            this,
+            getString(R.string.rationale_location),
+            RC_LOCATION_PERMISSION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    }
+
+    @AfterPermissionGranted(RC_LOCATION_PERMISSION)
+    private fun locationPermissionGranted() {
+        presenter.locationPermissionGranted()
+    }
+
     override fun showWeatherAtPoint(point: MapPoint, data: CurrentWeatherData) {
         showWeatherMarker(point, data)
     }
 
-    override fun showMyLocationWeather(point: MapPoint, data: CurrentWeatherData) {
+    override fun moveGoogleMapsCamera(point: MapPoint) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(point.toLatLng(), 16.0f))
-        showWeatherMarker(point, data)
     }
 
     override fun showCityAdded(city: String) {
@@ -95,12 +118,17 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map.setOnMyLocationButtonClickListener {
+            presenter.onGoogleMapsMyLocationButtonClick()
+            false
+        }
         map.setOnMapClickListener {
             presenter.onMapClick(it.toMapPoint())
         }
         map.setOnMarkerClickListener {
             presenter.onMarkerClick(it.position.toMapPoint())
         }
+        presenter.onGoogleMapReady()
     }
 
     private fun showWeatherMarker(point: MapPoint, data: CurrentWeatherData) {
@@ -122,26 +150,7 @@ class WeatherMapActivity : AppCompatActivity(), WeatherMapContract.View, OnMapRe
         }
     }
 
-    @SuppressLint("MissingPermission")
-    @AfterPermissionGranted(RC_LOCATION_PERMISSION)
-    private fun goToMyLocation() {
-        if (hasLocationPermission()) {
-            presenter.goToMyLocation()
-        } else {
-            // Ask for location permission.
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.rationale_location),
-                RC_LOCATION_PERMISSION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        }
-    }
-
     private fun px(dp: Float) = dp * resources.displayMetrics.density
-
-    private fun hasLocationPermission() =
-        EasyPermissions.hasPermissions(this, Manifest.permission.ACCESS_FINE_LOCATION)
 
     companion object {
         private const val RC_LOCATION_PERMISSION = 42
