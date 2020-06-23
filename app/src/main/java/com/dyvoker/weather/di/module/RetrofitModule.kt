@@ -5,9 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,21 +21,19 @@ class RetrofitModule(
     @Provides
     fun provideOkHttp(): OkHttpClient.Builder {
         val okHttpBuilder = OkHttpClient.Builder()
-        okHttpBuilder.addInterceptor (object : Interceptor {
-            override fun intercept(chain: Interceptor.Chain): Response {
-                val request = chain.request().newBuilder()
-                val originalHttpUrl = chain.request().url
-                val i = originalHttpUrl.pathSegments.indexOf("API_KEY")
-                if (i >= 0) {
-                    val url = originalHttpUrl
-                        .newBuilder()
-                        .setPathSegment(i, "3e7e519ea86c8e3fcf67c0f4870513d7")
-                        .build()
-                    request.url(url)
-                }
-                return chain.proceed(request.build())
+        okHttpBuilder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+            val originalHttpUrl = chain.request().url()
+            val i = originalHttpUrl.pathSegments().indexOf("API_KEY")
+            if (i >= 0) {
+                val url = originalHttpUrl
+                    .newBuilder()
+                    .setPathSegment(i, "3e7e519ea86c8e3fcf67c0f4870513d7")
+                    .build()
+                request.url(url)
             }
-        })
+            chain.proceed(request.build())
+        }
         return okHttpBuilder
     }
 

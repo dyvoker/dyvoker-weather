@@ -1,6 +1,7 @@
 package com.dyvoker.weather.common
 
 import android.app.Application
+import android.content.Context
 import androidx.multidex.MultiDex
 import com.dyvoker.weather.di.component.AppComponent
 import com.dyvoker.weather.di.component.DaggerAppComponent
@@ -16,9 +17,13 @@ class App: Application() {
         fun appComponent() = appComponent
     }
 
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
-        MultiDex.install(this)
         instance = this
         appComponent = DaggerAppComponent.factory().create(
             AppModule(this),
